@@ -1,0 +1,6 @@
+train: ./train/images
+val: ./valid/images
+path: C:\Users\karim\Desktop\Projects\logic proj\dataset\
+
+nc: 1
+names: ['People']
