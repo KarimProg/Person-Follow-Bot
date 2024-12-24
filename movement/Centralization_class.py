@@ -27,6 +27,16 @@ class Centralization:
         self.model = model
         self.video_src_zed = VIDEO_PATH_ZED
         self.cap_camera = cv2.VideoCapture(self.video_src_zed)
+        self.awelMara = True
+        
+        # Set buffer size to reduce latency
+        self.cap_camera.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
+        # If available, set FPS and resolution to match the stream
+        self.cap_camera.set(cv2.CAP_PROP_FPS, 30)  # Adjust to your stream's FPS
+        self.cap_camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)  # Match stream resolution
+        self.cap_camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
         self.finishedX = False
         self.finishedY = False
         self.no_detection = 0
@@ -142,6 +152,7 @@ class Centralization:
 
         id = None
         lost_detection_id = None
+        result = None
         while self.cap_camera.isOpened():
             e3mel = True
             ret, frame_cam = self.cap_camera.read()
@@ -149,6 +160,7 @@ class Centralization:
                 break
 
             (frame_height, frame_width) = frame_cam.shape[:2]
+
             result = self.model.track(
                 source=frame_cam,
                 tracker="botsort.yaml",
@@ -267,7 +279,8 @@ class Centralization:
 
                 self.hamada[1] = forwardSpeed
 
-                self.sendHamada(self.hamada)
+                # self.sendHamada(self.hamada)
+                print(self.hamada)
 
                 self.last_hamada = self.hamada.copy()
 
