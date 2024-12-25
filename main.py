@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from movement.Centralization_class import Centralization
-from movement.PID import PID_class
+from movement.Control_class import Control
 from ultralytics import YOLO
 
 # Define the RTSP URL
@@ -25,6 +25,7 @@ gst_pipeline = (
 # Open the video stream
 cap = cv2.VideoCapture(gst_pipeline, cv2.CAP_GSTREAMER)
 centralization = Centralization(xOffset=0)
+control = Control()
 model = YOLO("yolov8n.pt")
 
 if not cap.isOpened():
@@ -50,7 +51,11 @@ while True:
         classes=[0],
     )
 
-    centralization.centralize(result, frame)
+    yaw, y = centralization.centralize(result, frame)
+    # yaw = 0
+    # y = 0
+
+    control.post_speeds(y, yaw)
 
     # Exit on pressing 'q'
     if cv2.waitKey(1) & 0xFF == ord("q"):

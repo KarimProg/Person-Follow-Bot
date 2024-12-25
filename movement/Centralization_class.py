@@ -11,7 +11,7 @@ class Centralization:
         self.frame_width = 1280
         self.frame_height = 720
 
-        self.PID = PID.PID_class(100, 0, 0)
+        self.PID = PID.PID_class(230, 120, 150)
         # Set the setpoint
         self.PID.set_setpoint(self.frame_width // 2 + xOffset)
 
@@ -72,12 +72,9 @@ class Centralization:
             box = self.__get_centralizing_object(result, self.idOfCentralizingObject)
             if box is None:
                 self.framesCentralizingObjectDisappeared += 1
-                if self.framesCentralizingObjectDisappeared > 50:
+                if self.framesCentralizingObjectDisappeared > 30:
                     self.idOfCentralizingObject = None
                     self.framesCentralizingObjectDisappeared = 0
-                    cv2.imshow("RTSP Stream", frame)
-                    # Return default speeds when the object is not found
-                    return 0, 0
 
         if box is None:
             cv2.imshow("RTSP Stream", frame)
@@ -137,4 +134,4 @@ class Centralization:
 
         print(f'Normalize PID value: {normalized_pid_value}')
 
-        return normalized_pid_value, 100  # 100 is the forward speed of the robot
+        return normalized_pid_value, 0  # 100 is the forward speed of the robot

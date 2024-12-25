@@ -1,16 +1,29 @@
-
+import requests
 
 class Control():
     def __init__(self):
-        self.inertia_delay = 0.3
-        
-        self.yaw_pid_param    = {"kp": 7.5   , "ki": 0.2 , "kd": 4 }
+        # ESP IP address
+        self.esp_ip = "http://192.168.115.125:8080"
+        self.route = "/speeds"
 
-        # self.hamada_topic = rospy.Publisher('move', Int16MultiArray, queue_size=100)
 
-    def set_hamada(self, move , verbose = False):
-        for i in move:
-            i = int(i)
-        print(f"Moving with: {move}")
-        # self.hamada_topic.publish(Int16MultiArray(data=move))
+    def post_speeds(self, y, yaw):
+        # Data payload
+        payload = {
+            'y': y,
+            'yaw': yaw
+        }
 
+        # Send POST request
+        try:
+            response = requests.post(f"{self.esp_ip}{self.route}", data=payload)
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to send data. Error: {e}")
+            return
+
+        # Check response
+        if response.status_code == 200:
+            # print("Response from ESP:", response.text)
+            1
+        else:
+            print(f"Failed to send data. Status code: {response.status_code}")
