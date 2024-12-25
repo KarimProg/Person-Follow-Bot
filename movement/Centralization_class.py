@@ -3,7 +3,7 @@ import movement.PID as PID
 
 class Centralization:
     # Setting default values
-    def __init__(self, xOffset=0):
+    def __init__(self, pid, xOffset=0):
         self.idOfCentralizingObject = None
         self.framesCentralizingObjectDisappeared = 0
 
@@ -11,7 +11,7 @@ class Centralization:
         self.frame_width = 1280
         self.frame_height = 720
 
-        self.PID = PID.PID_class(230, 120, 150)
+        self.PID = pid
         # Set the setpoint
         self.PID.set_setpoint(self.frame_width // 2 + xOffset)
 
@@ -132,6 +132,4 @@ class Centralization:
         # Normalize the PID value
         normalized_pid_value = pid_value / (self.frame_width // 2)
 
-        print(f'Normalize PID value: {normalized_pid_value}')
-
-        return normalized_pid_value, 0  # 100 is the forward speed of the robot
+        return normalized_pid_value, 200  # 100 is the forward speed of the robot

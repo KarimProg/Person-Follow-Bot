@@ -5,7 +5,7 @@ from vosk import Model, KaldiRecognizer
 import pyaudio
 
 # Load the model
-model = Model("vosk-model-en-us-0.42-gigaspeech")
+model = Model("./audio model/vosk-model-en-us-0.22-lgraph")
 rec = KaldiRecognizer(model, 16000)
 
 # Initialize PyAudio
@@ -17,6 +17,7 @@ stream.start_stream()
 
 print("Listening...")
 
+last = None
 while True:
     data = stream.read(4000)
     out = None
@@ -25,7 +26,20 @@ while True:
     else:
         out = json.loads(rec.PartialResult())['partial']
 
-    if out == "follow":
-        print("match1")
-    elif out == "stop":
-        print("match2")
+    sentence = out.split()
+    words = ["follow", "stop"]
+    for word in sentence:
+        if word in words:
+            out = word
+            break
+    if out == "follow" and last != "follow":
+        print("Follow")
+        with open("command.txt", "w") as f:
+            f.write("follow")
+        last = "follow"
+
+    elif out == "stop" and last != "stop":
+        print("Stop")
+        with open("command.txt", "w") as f:
+            f.write("stop")
+        last = "stop"

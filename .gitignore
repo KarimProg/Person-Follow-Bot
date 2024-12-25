@@ -13,3 +13,6 @@ tempCodeRunnerFile.py
 *.cache
 vosk-model-ar-mgb2-0.4
 vosk-model-en-us-0.42-gigaspeech
+vosk-model-en-us-0.22-lgraph
+__pycache__
+movement/__pycache__
